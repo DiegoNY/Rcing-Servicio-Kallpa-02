@@ -9,8 +9,8 @@ export const ObtnerProductos = (sql: Request, numero_documento: string): Promise
     CASE
         WHEN D.Impuesto != 0 THEN  D.TotalVenta - D.Impuesto
         WHEN D.Impuesto = 0 THEN 0
-    END as Subtotal,
-
+    END as SubTotal,
+    D.Impuesto as Igv,
     0 as Descuento, D.TotalVenta as Total, null as Lote, null as FechaVcto, null as Labora, null as Pastilla, null as Palote 
 
 

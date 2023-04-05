@@ -23,6 +23,7 @@ export type Cuota = {
 
 export type Documento = {
     CORRELATIV: string
+    VentaId:number
     items: Item[]
     cuotas: Cuota[]
     cliente: string

@@ -28,52 +28,49 @@ setInterval(async () => {
 
         //Obteniendo documentos y armando estructura 🔨👷‍♂️ 
         const documentosBD = await ObtnerDocumentos(request)
-        const items_d = await ObtnerProductos(request, '1');
-        const cuotas_d = await ObtenerCuotas(request, '1');
 
-        console.log(documentosBD);
-        documentos = documentosBD;
-        cuotas = cuotas_d
-        items = items_d
-        // documentosBD.map(async (documento: Documento) => {
-        //     documento.ruc = ruc;
-        //     documento.idSucursal = idSucursal;
-        //     documento.TipoDoc = `0${documento.TipoDoc}`
-        //     if (documento.MontoExcento == null) documento.MontoExcento = 0;
-        //     if (documento.MontoGratuito == null) documento.MontoGratuito = 0;
-        //     if (documento.Descuento == null) documento.Descuento = 0;
-        //     documento.FechaEmision = new Date(documento.FechaEmision).toISOString().substring(0, 10);
-        //     documento.HoraEmision = "00:00:00";
-        //     documento.FechaVencimiento = new Date(documento.FechaEmision).toISOString().substring(0, 10);
-        //     documento.placa = null;
-        //     //Campo desaparecera CORRELATIV
-        //     documento.CORRELATIV = documento.CodVenta;
+        documentosBD.map(async (documento: Documento) => {
+            documento.ruc = ruc;
+            documento.idSucursal = idSucursal;
+            documento.TipoDoc = `0${documento.TipoDoc}`
+            if (documento.MontoGratuito == null) documento.MontoGratuito = 0;
+            if (documento.Descuento == null) documento.Descuento = 0;
+            documento.FechaEmision = new Date(documento.FechaEmision).toISOString().substring(0, 10);
+            documento.HoraEmision = "00:00:00";
+            documento.FechaVencimiento = new Date(documento.FechaEmision).toISOString().substring(0, 10);
+            documento.placa = null;
+            documento.Porcentaje = Number(`${documento.Porcentaje}`.split('.')[1])
+            documento.Serie = documento.CodVenta.split('-')[0]
+            documento.Correlativo = documento.CodVenta.split('-')[1]
+            //Campo desaparecera CORRELATIV
+            documento.CORRELATIV = documento.CodVenta;
 
-        //     const items = await ObtnerProductos(request, documento.CodVenta)
-        //     items.map(item => {
-        //         if (item.Descuento == null) item.Descuento = 0;
-        //     })
-        //     // console.log(items);
-        //     documento.items = items || [];
-        //     //Proveedor no emite ventas a credito por eso cuotas es igual a [] 
-        //     documento.cuotas = [];
-        //     documento.otros = "";
+            const items = await ObtnerProductos(request, `${documento.VentaId}`);
+            items.map(item => {
+                if (item.Descuento == null) item.Descuento = 0;
+            })
 
-        //     documentos = documentosBD;
+            const cuotas = await ObtenerCuotas(request, `${documento.VentaId}`);
 
-        // })
 
-        // if (documentos.length != 0) {
-        //     Declarar(documentos)
-        //         .then((rta: any) => {
-        //             const { data } = rta;
-        //             console.log(data);
-        //             documentos = []
-        //         })
-        //         .catch(error => {
-        //             console.log("Error al declarar", error)
-        //         })
-        // }
+            documento.items = items || [];
+            documento.cuotas = cuotas;
+
+            documentos = documentosBD;
+
+        })
+
+        if (documentos.length != 0) {
+            Declarar(documentos)
+                .then((rta: any) => {
+                    const { data } = rta;
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.log("Error al declarar", error)
+                })
+            documentos = []
+        }
 
     } catch (error) {
         console.log(error)
