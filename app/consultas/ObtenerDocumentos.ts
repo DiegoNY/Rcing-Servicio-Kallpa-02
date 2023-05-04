@@ -11,7 +11,7 @@ export const ObtnerDocumentos = (sql: Request): Promise<Documento[]> => {
     D.DOCTYPEID_REF_NC as TipoReferencia,D.NBRDOCUMENT_REF_NC as DocumentoReferencia,D.COD_MOTIVO_REF_NC as CodMotivo,D.DESCRIPCION_REF_NC as Motivo,
     D.FECHA_HORA_REF_NC as HoraReferencia ,null as otros, null as Detraccion, null as PorcDetraccion, null as MontoDetraccion, null as RegimenPercepcion,
     null as TasaPercepcion, null as MontoPercepcion, 1 as Estado
-    FROM VENTA_RCI AS D
+    FROM VENTA_RCI AS D WHERE D.EstatusNube iss null ORDER BY D.VentaId ASC
     `;
 
 
