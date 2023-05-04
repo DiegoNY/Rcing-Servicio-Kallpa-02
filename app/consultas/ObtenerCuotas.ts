@@ -13,8 +13,15 @@ export const ObtenerCuotas = (sql: Request, numero_documento: string): Promise<C
                 reject(err);
             }
 
-            const productos = result?.recordset;
-            resolve(productos);
+            const cuotas = result?.recordset;
+            /**Moficacion de cuotas */
+            cuotas.map((cuota: any) => {
+                cuota.FechaCuota = new Date(cuota.FechaCuota)
+                    .toISOString()
+                    .substring(0, 10);
+            });
+
+            resolve(cuotas);
         });
 
     })

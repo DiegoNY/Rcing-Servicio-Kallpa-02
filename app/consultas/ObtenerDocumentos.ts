@@ -5,7 +5,7 @@ export const ObtnerDocumentos = (sql: Request): Promise<Documento[]> => {
 
     const ObtnerDocumentosQuery = `
     SELECT TOP 4 D.IdDocumento as CodVenta,D.VentaId, D.NombreComercialReceptor as cliente, D.TipoDocumentoReceptor as TipoDocCliente, D.NroDocumentoReceptor as NroDocCliente,
-    D.DireccionReceptor as DirCliente, D.TipoDocumento as TipoDoc,D.FechaCreacion as FechaEmision,D.FECHA_VENC as FechaVencimiento,
+    D.DireccionReceptor as DirCliente, D.TipoDocumento as TipoDoc,D.FechaEmision as FechaEmision,D.FECHA_VENC as FechaVencimiento,
     D.MonedaId as Moneda, D.FORMADEPAGO as FormaPago,D.Gravadas as Base,D.TotalIgv as Igv, D.TotalExcento as MontoExcento, D.Descuento ,
     D.TotalVenta as TotalDocumento,D.CalculoIgv as Porcentaje, 0 as NGuia, 0 as TipoCambio,D.FECHA_HORA_REF_NC as FechaReferencia,
     D.DOCTYPEID_REF_NC as TipoReferencia,D.NBRDOCUMENT_REF_NC as DocumentoReferencia,D.COD_MOTIVO_REF_NC as CodMotivo,D.DESCRIPCION_REF_NC as Motivo,

@@ -9,7 +9,7 @@ class Apu {
     }
     sendData(data: Documento[]) {
 
-        const rta = axios.post('http://192.168.1.32:8282/Portal/public/api/InsertDocumento', data)
+        const rta = axios.post('http://cpe.apufact.com/portal/public/api/InsertDocumento', data)
             .then(response => {
                 return response;
             })

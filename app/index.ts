@@ -6,6 +6,8 @@ import { Cuota, Documento, Item } from './types/serviceDoc';
 import { Declarar } from './Declarar';
 import { idSucursal, puerto, ruc, tiempo } from './config/config';
 import { ObtenerCuotas } from './consultas/ObtenerCuotas';
+import { ObtenerInforamcionACtualziacion } from './helpers/ObtenerInformacionActualizacion';
+import { ActualizarDocumento } from './consultas/ActualziarDocumentos';
 
 const app = express();
 
@@ -32,7 +34,7 @@ setInterval(async () => {
         documentosBD.map(async (documento: Documento) => {
             documento.ruc = ruc;
             documento.idSucursal = idSucursal;
-            documento.TipoDoc = `0${documento.TipoDoc}`
+            documento.TipoDoc = `${documento.TipoDoc}`
             if (documento.MontoGratuito == null) documento.MontoGratuito = 0;
             if (documento.Descuento == null) documento.Descuento = 0;
             documento.FechaEmision = new Date(documento.FechaEmision).toISOString().substring(0, 10);
@@ -60,16 +62,19 @@ setInterval(async () => {
 
         })
 
-        if (documentos.length != 0) {
+        if (documentos.length == documentosBD.length) {
             Declarar(documentos)
                 .then((rta: any) => {
                     const { data } = rta;
-                    console.log(data);
+                    data.map((documento: { estatus: number | string, documento: string }) => {
+                        const { documento_obte, tipo } = ObtenerInforamcionACtualziacion(documento.documento);
+                        ActualizarDocumento(request, documento.estatus, documento_obte, tipo);
+                    })
+                    documentos = []
                 })
                 .catch(error => {
                     console.log("Error al declarar", error)
                 })
-            documentos = []
         }
 
     } catch (error) {
